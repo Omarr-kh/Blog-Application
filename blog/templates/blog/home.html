@@ -201,6 +201,7 @@
           {% if request.user == post.author %}
           <a href="{% url 'edit-post' post.id %}" class="button">Edit Post</a>
           <a href="{% url 'delete-post' post.id%}" class="button">Delete Post</a>
+          <a href="{% url 'unpublish-post' post.id%}" class="button">Unpublish Post</a>
           {% endif %}
         </div>
         <hr>
@@ -210,10 +211,10 @@
           <p class="not-visible"><strong>This Post is not published, only you can see it</strong></p>
           <p class="post-content">{{ post.content|truncatewords:15 }}</p>
           <a href="{% url 'view-post' post.id %}" class="button">View Post</a>
-          {% if request.user == post.author %}
           <a href="{% url 'edit-post' post.id %}" class="button">Edit Post</a>
           <a href="{% url 'delete-post' post.id%}" class="button">Delete Post</a>
-          {% endif %}
+          <a href="{% url 'publish-post' post.id%}" class="button">Publish Post</a>
+          
         </div>
         <hr>
         {% endif %}

@@ -110,6 +110,11 @@
       <div class="btn-div">
         <a href="{% url 'edit-post' post.id %}" class="button">Edit Post</a>
         <a href="{% url 'delete-post' post.id %}" class="button">Delete Post</a>
+        {% if post.is_published %}
+        <a href="{% url 'unpublish-post' post.id%}" class="button">Unpublish Post</a>
+        {% else %}
+        <a href="{% url 'publish-post' post.id%}" class="button">Publish Post</a>
+        {% endif %}
       </div>
       {% endif %}
     </div>
