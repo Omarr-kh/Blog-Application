@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>View Post</title>
+    <style>
+      body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+      }
+
+      .post-details p {
+        font-size: 16px;
+        line-height: 2;
+        margin: 0 0 15px 0;
+        padding: 10px;
+        border-left: 4px solid #007bff;
+        background-color: #f9f9f9;
+        border-radius: 4px;
+      }
+
+      .post-details strong {
+        color: #007bff;
+      }
+
+      .post-details p strong {
+        display: inline-block;
+        width: 120px;
+        font-weight: bold;
+      }
+
+      .btn-div {
+        margin-top: 20px;
+        text-align: center;
+      }
+
+      .btn-div .button {
+        display: inline-block;
+        padding: 10px 20px;
+        color: #fff;
+        text-decoration: none;
+        background-color: #007bff;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+        margin: 0 10px;
+      }
+
+      .btn-div .button:hover {
+        background-color: #0056b3;
+      }
+
+      .btn-div .button:active {
+        background-color: #004080;
+      }
+
+      .header {
+        text-align: center;
+      }
+
+      .home-button {
+        display: flex;
+        width: 50px;
+        padding: 10px 20px;
+        margin-bottom: 50px;
+        font-weight: bold;
+        color: #fff;
+        background-color: darkblue;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .home-button:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="btn-div">
+      <a href="{% url 'home' %}" class="button">HOME</a>
+    </div>
+    <h2 class="header">Post Details</h2>
+
+    <div class="container">
+      <div class="post-details">
+        <p><strong>Title:</strong> {{ post.title }}</p>
+        <p><strong>Author:</strong> {{ post.author }}</p>
+        <p><strong>Content:</strong> {{ post.content }}</p>
+      </div>
+
+      {% if request.user == post.author %}
+      <div class="btn-div">
+        <a href="{% url 'edit-post' post.id %}" class="button">Edit Post</a>
+        <a href="{% url 'home'%}" class="button">Delete Post</a>
+      </div>
+      {% endif %}
+    </div>
+
+  </body>
+
+</html>

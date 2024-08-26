@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posts</title>
+    <style>
+      body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+      }
+
+      .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .header-container .button-div {
+        margin-right: auto;
+        /* Pushes the button to the left */
+      }
+
+      .header-container .welcome-div {
+        display: flex;
+        align-items: center;
+      }
+
+      .header-container .welcome {
+        margin-right: 20px;
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      .header-container .button {
+        padding: 10px 20px;
+        font-weight: bold;
+        font-size: 16px;
+        color: #fff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 6px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .header-container .button:hover {
+        background-color: #0056b3;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .header-container .button:active {
+        background-color: #004080;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .header-container .button-add {
+        background-color: #000;
+      }
+
+      .header-container .button-add:hover {
+        background-color: #333;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .post_title {
+        font-size: 24px;
+        font-weight: bold;
+        /* margin: 10px 0; */
+      }
+
+      .post-content {
+        font-size: 16px;
+        line-height: 1.6;
+        margin: 30px 0;
+        background-color: #f9f9f9;
+        padding: 10px;
+        border-left: 4px solid #007bff;
+        border-radius: 4px;
+      }
+
+      .button {
+        padding: 10px 20px;
+        font-weight: bold;
+        font-size: 16px;
+        color: #fff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 6px;
+        text-decoration: none;
+        cursor: pointer;
+        margin: 5px;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .button:hover {
+        background-color: #0056b3;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .button:active {
+        background-color: #004080;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .button-add {
+        background-color: #000;
+      }
+
+      .button-add:hover {
+        background-color: #333;
+      }
+
+      .welcome-div {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .welcome {
+        margin-right: 20px;
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      hr {
+        border: 1px solid #ddd;
+        margin: 20px 0;
+      }
+
+      .button-div {
+        display: flex;
+        justify-content: center;
+      }
+
+      .post {
+        margin-bottom: 60px;
+      }
+
+      .create-div {
+        justify-content: left;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <header>
+        <div class="header-container">
+          {% if request.user.is_authenticated %}
+          <div class="button-div">
+            <a href="{% url 'create-post' %}" class="button button-add">Create a Post</a>
+          </div>
+          {% endif %}
+
+          <div class="welcome-div">
+            {% if request.user.is_authenticated %}
+            <span class="welcome">Welcome, {{ request.user.username }}!</span>
+            <a class="button" href="{% url 'logout' %}">Logout</a>
+            {% else %}
+            <span class="welcome">Welcome, Guest!</span>
+            <a class="button" href="{% url 'login' %}">Login</a>
+            {% endif %}
+          </div>
+        </div>
+        <h1 class="header">Posts</h1>
+      </header>
+      <div>
+        {% for post in posts %}
+        <div class="post">
+          <p class="post_title"><strong>Title:</strong> {{ post.title }}</p>
+          <p class="post-content">{{ post.content|truncatewords:15 }}</p>
+          <a href="{% url 'view-post' post.id %}" class="button">View Post</a>
+          {% if request.user == post.author %}
+          <a href="{% url 'edit-post' post.id %}" class="button">Edit Post</a>
+          <a href="{% url 'home'%}" class="button">Delete Post</a>
+          {% endif %}
+        </div>
+        <hr>
+        {% endfor %}
+      </div>
+    </div>
+  </body>
+
+</html>
