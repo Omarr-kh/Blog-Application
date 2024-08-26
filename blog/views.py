@@ -1,14 +1,67 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
-from .forms import CreateUserForm
+from .forms import CreateUserForm, PostCreationForm
 from django.contrib import messages
+
+from .models import Post
+from django.contrib.auth.models import User
 
 
 def home(request):
-    return HttpResponse("Hello, World!")
+    posts = Post.objects.all()
+    context = {"posts": posts}
+
+    return render(request, "home.html", context)
+
+
+@login_required(login_url="login")
+def create_post(request):
+    user = request.user
+    form = PostCreationForm()
+
+    if request.method == "POST":
+        form = PostCreationForm(request.POST)
+        if form.is_valid():
+            post = form.save(
+                commit=False
+            )  # Create a post instance but don't save it yet
+            post.author = user  # Set the author to the logged-in user
+            post.save()  # Now save the post with the user set
+            return redirect("home")  # Redirect after saving
+
+    context = {"form": form}
+    return render(request, "create-post.html", context)
+
+
+@login_required(login_url="login")
+def view_post(request, post_id):
+    post = Post.objects.get(id=post_id)
+    context = {"post": post}
+
+    return render(request, "view-post.html", context)
+
+
+@login_required(login_url="login")
+def edit_post(request, post_id):
+    post = Post.objects.get(id=post_id)
+
+    if request.user != post.author:
+        return redirect("home")
+
+    if request.method == "POST":
+        form = PostCreationForm(request.POST, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect("view-post", post_id=post.id)
+
+    form = PostCreationForm(instance=post)
+    context = {
+        "form": form,
+    }
+    return render(request, "create-post.html", context)
 
 
 def login_page(request):
@@ -24,14 +77,14 @@ def login_page(request):
             login(request, user)
             return redirect("home")
         else:
-            messages.info(request, 'Username or Password is incorrect')
+            messages.info(request, "Username or Password is incorrect")
 
     return render(request, "login.html", context)
 
 
-def logoutUser(request):
+def logout_User(request):
     logout(request)
-    return redirect('login')
+    return redirect("home")
 
 
 def register_page(request):
