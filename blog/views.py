@@ -64,6 +64,20 @@ def edit_post(request, post_id):
     return render(request, "create-post.html", context)
 
 
+@login_required(login_url="login")
+def delete_post(request, post_id):
+    post = Post.objects.get(id=post_id)
+
+    if request.user != post.author:
+        return redirect("home")
+
+    if request.method == "POST":
+        post.delete()
+        return redirect("home")
+
+    return render(request, "confirm-delete.html", {"post": post})
+
+
 def login_page(request):
     context = {}
 
