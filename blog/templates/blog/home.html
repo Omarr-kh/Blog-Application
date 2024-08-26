@@ -195,7 +195,7 @@
           <a href="{% url 'view-post' post.id %}" class="button">View Post</a>
           {% if request.user == post.author %}
           <a href="{% url 'edit-post' post.id %}" class="button">Edit Post</a>
-          <a href="{% url 'home'%}" class="button">Delete Post</a>
+          <a href="{% url 'delete-post' post.id%}" class="button">Delete Post</a>
           {% endif %}
         </div>
         <hr>
