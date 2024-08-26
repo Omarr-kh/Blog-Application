@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
+from django.http import HttpResponseRedirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -76,6 +78,29 @@ def delete_post(request, post_id):
         return redirect("home")
 
     return render(request, "confirm-delete.html", {"post": post})
+
+
+@login_required(login_url="login")
+def publish_post(request, post_id):
+    post = Post.objects.get(id=post_id)
+
+    if request.user != post.author:
+        return redirect("home")
+    post.is_published = True
+    post.save()
+    return HttpResponseRedirect(request.META.get("HTTP_REFERER", reverse("home")))
+
+
+@login_required(login_url="login")
+def unpublish_post(request, post_id):
+    post = Post.objects.get(id=post_id)
+
+    if request.user != post.author:
+        return redirect("home")
+    post.is_published = False
+    post.save()
+    return HttpResponseRedirect(request.META.get("HTTP_REFERER", reverse("home")))
+    # return redirect("home")
 
 
 def login_page(request):
